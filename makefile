@@ -30,7 +30,7 @@ TOOLS_PATH := ./tools
 #VERSION_RELEASE := V$(shell awk -F " " '/APP_RELEASE/ {gsub("0x",""); printf "%d", $$3/10; exit}' $(SRC_PATH)/include/version_cfg.h)
 VERSION_RELEASE := V$(shell awk -F " " '/APP_RELEASE/ {gsub("0x",""); printf "%.1f", $$3/10.0; exit}' $(SRC_PATH)/include/version_cfg.h)
 VERSION_BUILD := $(shell awk -F " " '/APP_BUILD/ {gsub("0x",""); printf "%02d", $$3; exit}' ./src/include/version_cfg.h)
-ZCL_VERSION_FILE := $(shell git log -1 --format=%cd --date=format:%Y%m%d -- src |  sed -e "'s/./\'&\',/g'" -e "'s/.$$//'")
+ZCL_VERSION_FILE := $(shell git log -1 --format=%cd --date=format:%Y%m%d -- src | sed -e "s/./'&',/g" -e 's/,$$//')
 
 
 TL_CHECK = $(TOOLS_PATH)/tl_check_fw.py
@@ -183,7 +183,7 @@ clean-project:
 	-@echo ' '
 	
 pre-build:
-	mkdir -p $(foreach s,$(OUT_DIR),$(OUT_PATH)$(s))
+	mkdir -p $(sort $(foreach s,$(OUT_DIR),$(OUT_PATH)$(s)) $(dir $(OBJS)))
 #	-" $(SDK_PATH)/tools/tl_link_load.sh" " $(SDK_PATH)/platform/boot/8258/boot_8258.link" "C:\TelinkSDK\SDK\tl_zigbee_sdk\build\tlsr_tc32/boot.link"
 	-@echo ' '
 
